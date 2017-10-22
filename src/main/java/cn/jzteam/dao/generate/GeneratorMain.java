@@ -1,4 +1,4 @@
-package cn.jzteam.dao.mybatis;
+package cn.jzteam.dao.generate;
 
 import cn.org.rapid_framework.generator.GeneratorFacade;
 import cn.org.rapid_framework.generator.GeneratorProperties;
