@@ -20,6 +20,7 @@ public abstract class TestDao {
 	 */
 	// update:根据id更新
 	// updateBatch:根据id批量更新List
+	// updateSpecial:传入一个entity和一个query（放在每个dao中）
 	
 	// incr:根据id把一个field增加delta
 	// decr:根据id把一个field减少delta

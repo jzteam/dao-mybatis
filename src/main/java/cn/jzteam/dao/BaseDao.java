@@ -20,6 +20,13 @@ public interface BaseDao<T,PK> {
      * @return
      */
     long insert(@Param("entity") T entity);
+    
+    /**
+     * 批量插入记录。
+     * @param entityList
+     * @return
+     */
+    long insertBatch(@Param("list") List<T> entityList);
 
     /**
      * 根据ID删除记录。
@@ -27,7 +34,14 @@ public interface BaseDao<T,PK> {
      * @param id
      * @return
      */
-    long deleteById(@Param("id") PK id);
+    long delete(@Param("id") PK id);
+    
+    /**
+     * 根据ids批量删除
+     * @param idList
+     * @return
+     */
+    long deleteBatch(@Param("list") List<PK> idList);
 
     /**
      * 根据ID更新所有不为空的字段。
@@ -35,7 +49,33 @@ public interface BaseDao<T,PK> {
      * @param entity
      * @return
      */
-    long updateById(@Param("entity") T entity);
+    long update(@Param("entity") T entity);
+    
+    /**
+     * 批量更新，根据ID
+     * @param entityList
+     * @return
+     */
+    long updateBatch(@Param("list") T entityList);
+    
+    // 放在各个dao接口中定义
+//    long updateSpecial(@Param("entity") T entity, @Param("query") QueryCondition query);
+    
+    /**
+     * 根据id把field字段增加delta，限于数字类型
+     * @param id
+     * @param delta
+     * @return
+     */
+    long incr(@Param("id") PK id, @Param("field") String field, @Param("delta") Object delta);
+    
+    /**
+     * 根据id把field字段减少delta，限于数字类型
+     * @param id
+     * @param delta
+     * @return
+     */
+    long decr(@Param("id") PK id, @Param("field") String field, @Param("delta") Object delta);
 
     /**
      * 根据ID获取指定记录。
