@@ -1,9 +1,8 @@
 <#include "/macro.include"/>
 <#assign className = table.className>
 <#assign classNameLower = className?uncap_first> 
-package ${basepackage}.entity;
+package ${basepackage}.dao.entity;
 
-import java.math.BigDecimal;
 <#include "/java_imports.include">
 
 public class ${className}Entity implements Serializable{

@@ -1,9 +1,8 @@
 <#include "/macro.include"/>
 <#assign className = table.className>
-package ${basepackage};
+package ${basepackage}.dao;
 
-import cn.jzteam.dao.mybatis.BaseDao;
-import ${basepackage}.entity.${className}Entity;
+import cn.jzteam.dao.BaseDao;
 
 import org.springframework.stereotype.Repository;
 

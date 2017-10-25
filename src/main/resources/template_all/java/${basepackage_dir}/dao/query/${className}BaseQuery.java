@@ -1,29 +1,20 @@
 <#assign className = table.className>
 <#assign classNameLower = className?uncap_first> 
-package ${basepackage}.bean.query;
+package ${basepackage}.dao.query;
 
-import com.pay.mybatis.query.PageQuery;
+import cn.jzteam.dao.query.PageQuery;
 
+import java.math.BigDecimal;
 <#include "/java_imports.include">
 
 
-public class ${className}Query extends PageQuery implements Serializable{
+public class ${className}BaseQuery extends PageQuery implements Serializable{
 
 	private static final long serialVersionUID=-1L;
 
 	<@generateFields/>
 
 	<@generateProperties/>
-
-	@Override
-	public String toString(){
-		try{
-			return JSONObject.toJSONString(this);
-		}catch(Exception e){
-			Logs.geterrorLogger().error("${className}Query toString exception occur.",e);
-		}
-		return null;
-	}
 
 }
 

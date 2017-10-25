@@ -1,6 +1,6 @@
 import java.util.List;
 import java.util.Date;
-
+import java.math.BigDecimal;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.Serializable;

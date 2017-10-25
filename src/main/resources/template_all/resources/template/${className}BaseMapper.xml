@@ -16,20 +16,20 @@
     </resultMap>
 
     <!-- 表中所有字段。 -->
-    <sql id="table_all_columns">
+    <sql id="base_table_all_columns">
         <#list table.columns as column>`${column.sqlName}`<#if column_has_next>, </#if></#list>
     </sql>
     
     <!-- 判断要获取的列。 -->
-    <sql id="sql_query_column">
+    <sql id="base_sql_query_column">
         <choose>
             <when test="query.queryColumnStr != null"><@jspEl value="query.queryColumnStr" /></when>
-            <otherwise><include refid="table_all_columns"/></otherwise>
+            <otherwise><include refid="base_table_all_columns"/></otherwise>
         </choose>
     </sql>
 
     <!-- 共用sql部分，根据Query对象生成查询条件。FLOAT类型不支持相等查询 -->
-    <sql id="sql_query_condition">
+    <sql id="base_sql_query_condition">
         <#list table.columns as column>
         <#if column.isDateTimeColumn && !column.contains("begin,start,end")>
         <if test="query.${column.columnNameLower}Begin != null"> AND ${column.sqlName} >= <@mybatisEl value="query.${column.columnNameLower}Begin, jdbcType=${column.jdbcType}" /> </if>
@@ -42,7 +42,7 @@
     </sql>
 
     <!-- 判断排序依据。 -->
-    <sql id="sql_order_by">
+    <sql id="base_sql_order_by">
         <choose>
             <when test="query.orderStr != null"> ORDER BY <@jspEl value="query.orderStr" /> </when>
             <otherwise> ORDER BY ${table.idColumn.columnNameLower} ASC </otherwise>
@@ -139,13 +139,13 @@
 
     <!-- selectById，根据主键获取唯一数据。 -->
     <select id="selectById" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="table_all_columns"/> FROM ${table.sqlName} WHERE ${table.idColumn.sqlName} = <@mybatisEl value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
+        SELECT <include refid="base_table_all_columns"/> FROM ${table.sqlName} WHERE ${table.idColumn.sqlName} = <@mybatisEl value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
     </select>
 
 
 	<!-- selectByIds，根据主键获取记录列表 -->
     <select id="selectByIds" resultMap="${className}BaseMap" parameterType="${table.idColumn.javaType}">
-        SELECT <include refid="table_all_columns"/> FROM ${table.sqlName}
+        SELECT <include refid="base_table_all_columns"/> FROM ${table.sqlName}
         <where> id IN 
 	        <foreach collection="list" open="(" separator="," close=")" item="itemId"><@mybatisEl value="itemId" /></foreach>
     	</where>
@@ -154,29 +154,29 @@
 
     <!-- selectByIds，根据主键获取唯一数据。 -->
     <select id="selectById_notry" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="table_all_columns"/> FROM ${table.sqlName} WHERE ${table.idColumn.sqlName} = <@mybatisEl value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" /> FOR UPDATE
+        SELECT <include refid="base_table_all_columns"/> FROM ${table.sqlName} WHERE ${table.idColumn.sqlName} = <@mybatisEl value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" /> FOR UPDATE
     </select>
 
 
 
     <!-- selectFirstOne，根据query条件过滤数据，按照主键生序排列获取第一条数据。 -->
     <select id="selectFirstOne" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="table_all_columns"/> FROM ${table.sqlName}
+        SELECT <include refid="base_table_all_columns"/> FROM ${table.sqlName}
         <where>
-            <include refid="sql_query_condition"/>
+            <include refid="base_sql_query_condition"/>
         </where>
-        <include refid="sql_order_by" /> LIMIT 1
+        <include refid="base_sql_order_by" /> LIMIT 1
     </select>
 
 
 
     <!-- 根据query条件获取数据列表。 -->
     <select id="selectList" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="sql_query_column"/> FROM ${table.sqlName}
+        SELECT <include refid="base_sql_query_column"/> FROM ${table.sqlName}
         <where>
-            <include refid="sql_query_condition"/>
+            <include refid="base_sql_query_condition"/>
         </where>
-        <include refid="sql_order_by" />
+        <include refid="base_sql_order_by" />
     </select>
 
 
@@ -185,18 +185,18 @@
     <select id="queryPageCount" resultType="java.lang.Long" parameterType="java.util.Map">
         SELECT COUNT(*) FROM ${table.sqlName}
         <where>
-            <include refid="sql_query_condition"/>
+            <include refid="base_sql_query_condition"/>
         </where>
     </select>
     
     
     <!-- 根据query条件分页获取指定页码的数据。 -->
     <select id="queryPageList" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="sql_query_column"/> FROM ${table.sqlName}
+        SELECT <include refid="base_sql_query_column"/> FROM ${table.sqlName}
         <where>
-            <include refid="sql_query_condition"/>
+            <include refid="base_sql_query_condition"/>
         </where>
-        <include refid="sql_order_by" />
+        <include refid="base_sql_order_by" />
         LIMIT <@jspEl value="query.startIndex" />, <@jspEl value="query.pageSize" />
     </select>
     

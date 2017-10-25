@@ -7,17 +7,17 @@ package cn.jzteam.dao.query;
 public class QueryCondition {
 
     // 希望获取的字段，以逗号分隔。
-    protected String queryStr;
+    protected String queryColumnStr;
 
-    // 排序字段。需要包含排序方式。e.g.: " out_nation ASC, in_nation DESC "
+	// 排序字段。需要包含排序方式。e.g.: " out_nation ASC, in_nation DESC "
     protected String orderStr;
     
-    public String getQueryStr() {
-        return queryStr;
+    public String getQueryColumnStr() {
+    	return queryColumnStr;
     }
-
-    public void setQueryStr(String queryStr) {
-        this.queryStr = queryStr;
+    
+    public void setQueryColumnStr(String queryColumnStr) {
+    	this.queryColumnStr = queryColumnStr;
     }
 
     public String getOrderStr() {
