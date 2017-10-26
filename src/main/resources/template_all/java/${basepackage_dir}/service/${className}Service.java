@@ -3,10 +3,11 @@
 <#assign classNameLower = className?uncap_first>
 
 package ${basepackage}.service;
+import ${basepackage}.dao.entity.${className}Entity;
+import ${basepackage}.dao.query.${className}BaseQuery;
 
-import com.pay.mybatis.service.CrudService;
-import org.apache.ibatis.annotations.Param;
+import cn.jzteam.swift.service.BaseService;
 
-public interface ${className}Service extends CrudService<${className}BO, ${className}Query, ${table.idColumn.simpleJavaType}>{
+public interface ${className}Service extends BaseService<${className}Entity, ${className}BaseQuery, ${table.idColumn.simpleJavaType}>{
 
 }

@@ -32,11 +32,11 @@
     <sql id="base_sql_query_condition">
         <#list table.columns as column>
         <#if column.isDateTimeColumn && !column.contains("begin,start,end")>
-        <if test="query.${column.columnNameLower}Begin != null"> AND ${column.sqlName} >= <@mybatisEl value="query.${column.columnNameLower}Begin, jdbcType=${column.jdbcType}" /> </if>
-        <if test="query.${column.columnNameLower}End != null"> AND ${column.sqlName} &lt; <@mybatisEl value="query.${column.columnNameLower}End, jdbcType=${column.jdbcType}" /> </if>
+        <if test="query.${column.columnNameLower}Begin != null"> AND `${column.sqlName}` >= <@mybatisEl value="query.${column.columnNameLower}Begin, jdbcType=${column.jdbcType}" /> </if>
+        <if test="query.${column.columnNameLower}End != null"> AND `${column.sqlName}` &lt; <@mybatisEl value="query.${column.columnNameLower}End, jdbcType=${column.jdbcType}" /> </if>
         <#elseif column.jdbcType == "FLOAT">
         <#else>
-        <if test="query.${column.columnNameLower} != null"> AND ${column.sqlName} = <@mybatisEl value="query.${column.columnNameLower}, jdbcType=${column.jdbcType}" /> </if>
+        <if test="query.${column.columnNameLower} != null"> AND `${column.sqlName}` = <@mybatisEl value="query.${column.columnNameLower}, jdbcType=${column.jdbcType}" /> </if>
         </#if>
         </#list>
     </sql>
@@ -45,7 +45,7 @@
     <sql id="base_sql_order_by">
         <choose>
             <when test="query.orderStr != null"> ORDER BY <@jspEl value="query.orderStr" /> </when>
-            <otherwise> ORDER BY ${table.idColumn.columnNameLower} ASC </otherwise>
+            <otherwise> ORDER BY `${table.idColumn.columnNameLower}` ASC </otherwise>
         </choose>
     </sql>
 
@@ -69,6 +69,8 @@
 	        <trim suffixOverrides=",">
 	        <#list table.columns as column>
 	        <#if column.pk>
+	        <#elseif column.isDateTimeColumn && column.contains("create,update,modify")>
+            	NOW()<#if column_has_next>, </#if>
 	        <#else>
 	        	<if test="entity.${column.columnNameLower} != null">
 	        		<@mybatisEl value="entity.${column.columnNameLower}, jdbcType=${column.jdbcType}" /><#if column_has_next>, </#if>
@@ -80,26 +82,52 @@
     </insert>
     
     
-    
     <!-- insertBatch，批量插入 -->
-    
-    
-    
-    
+    <insert id="insertBatch" parameterType="java.util.Map">
+    	<foreach collection="list" item="entity" separator=";"> 
+    	
+    		INSERT INTO ${table.sqlName} (
+		        <trim suffixOverrides=",">
+		        <#list table.columns as column>
+		       	<#if column.pk>
+		       	<#else>
+		       		<if test="entity.${column.columnNameLower} != null">
+		       			`${column.sqlName}`<#if column_has_next>, </#if>
+		       		</if>
+		       	</#if>
+		        </#list>
+		        </trim>
+	        ) VALUES (
+		        <trim suffixOverrides=",">
+		        <#list table.columns as column>
+		        <#if column.pk>
+		        <#elseif column.isDateTimeColumn && column.contains("create,update,modify")>
+            		NOW()<#if column_has_next>, </#if>
+		        <#else>
+		        	<if test="entity.${column.columnNameLower} != null">
+		        		<@mybatisEl value="entity.${column.columnNameLower}, jdbcType=${column.jdbcType}" /><#if column_has_next>, </#if>
+		        	</if>
+		        </#if>
+		        </#list>
+		        </trim>
+	        )
+        
+        </foreach>
+        ;
+    </insert>
     
 
     <!-- delete，根据主键删除指定表数据。 -->
     <delete id="deleteById" parameterType="java.util.Map">
-        DELETE FROM ${table.sqlName} WHERE ${table.idColumn.sqlName} = <@mybatisEl value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
+        DELETE FROM ${table.sqlName} WHERE `${table.idColumn.sqlName}` = <@mybatisEl value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
     </delete>
     
     
-    
-    
-    
-    <!-- deleteBatch，批量插入 -->
-    
-    
+    <!-- deleteBatch，批量删除，根据id -->
+    <delete id="deleteBatch" parameterType="java.util.Map">
+        DELETE FROM ${table.sqlName} WHERE `${table.idColumn.sqlName}` IN
+        <foreach collection="list" item="item" open="(" close=")" separator=","><@mybatisEl value="item" /></foreach>
+    </delete>
     
 
     <!-- update，根据主键更新表数据。 -->
@@ -108,12 +136,12 @@
         <set>
         <#list table.columns as column>
         <#if !column.pk || (column.isDateTimeColumn && !column.contains("update,modify"))>
-            <if test="entity.${column.columnNameLower} != null">${column.sqlName} = <@mybatisEl value="entity.${column.columnNameLower}, jdbcType=${column.jdbcType}" />, </if>
+            <if test="entity.${column.columnNameLower} != null">`${column.sqlName}` = <@mybatisEl value="entity.${column.columnNameLower}, jdbcType=${column.jdbcType}" />, </if>
         </#if>
         </#list>
         <#list table.columns as column>
             <#if column.isDateTimeColumn && column.contains("update,modify")>
-            ${column.sqlName} = NOW(),
+            `${column.sqlName}` = NOW(),
             </#if>
         </#list>
         </set>
@@ -123,18 +151,65 @@
     
     
     <!-- updateBatch，批量更新，根据id -->
+    <update id="update" parameterType="java.util.Map">
+    	<foreach collection="list" separator=";" item="entity">
+	    	UPDATE ${table.sqlName}
+	        <set>
+	        <#list table.columns as column>
+	        <#if !column.pk || (column.isDateTimeColumn && !column.contains("update,modify"))>
+	            <if test="entity.${column.columnNameLower} != null">`${column.sqlName}` = <@mybatisEl value="entity.${column.columnNameLower}, jdbcType=${column.jdbcType}" />, </if>
+	        </#if>
+	        </#list>
+	        <#list table.columns as column>
+	            <#if column.isDateTimeColumn && column.contains("update,modify")>
+	            `${column.sqlName}` = NOW(),
+	            </#if>
+	        </#list>
+	        </set>
+	        WHERE ${table.idColumn.sqlName} = <@mybatisEl value="entity.${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
+    	</foreach>
+    	;
+    </update>
+    
+    <!-- update，根据条件更新 -->
+    <update id="updateSpecial" parameterType="java.util.Map">
+        UPDATE ${table.sqlName}
+        <set>
+        <#list table.columns as column>
+        <#if !column.pk || (column.isDateTimeColumn && !column.contains("update,modify"))>
+            <if test="entity.${column.columnNameLower} != null">`${column.sqlName}` = <@mybatisEl value="entity.${column.columnNameLower}, jdbcType=${column.jdbcType}" />, </if>
+        </#if>
+        </#list>
+        <#list table.columns as column>
+            <#if column.isDateTimeColumn && column.contains("update,modify")>
+            `${column.sqlName}` = NOW(),
+            </#if>
+        </#list>
+        </set>
+        <where>
+            <include refid="base_sql_query_condition"/>
+        </where>
+    </update>
     
     
+    <!-- incr，根据id把field字段增加delta，限于数字类型；mysql5.6以上版本 -->
+    <update id="update" parameterType="java.util.Map">
+        UPDATE ${table.sqlName}
+        <set>
+        	`<@jspEl value="field" />` = `<@jspEl value="field" />` + <@mybatisEl value="delta" />, 
+        </set>
+        WHERE `${table.idColumn.sqlName}` = <@mybatisEl value="entity.${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
+    </update>
     
     
-    <!-- incr，根据id把field字段增加delta，限于数字类型 -->
-    
-    
-    
-    <!-- decr，根据id把field字段增加delta，限于数字类型 -->
-    
-    
-
+    <!-- decr，根据id把field字段增加delta，限于数字类型；mysql5.6以上版本 -->
+    <update id="update" parameterType="java.util.Map">
+        UPDATE ${table.sqlName}
+        <set>
+        	`<@jspEl value="field" />` = `<@jspEl value="field" />` - <@mybatisEl value="delta" />, 
+        </set>
+        WHERE `${table.idColumn.sqlName}` = <@mybatisEl value="entity.${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
+    </update>
     
 
     <!-- selectById，根据主键获取唯一数据。 -->
@@ -158,7 +233,6 @@
     </select>
 
 
-
     <!-- selectFirstOne，根据query条件过滤数据，按照主键生序排列获取第一条数据。 -->
     <select id="selectFirstOne" resultMap="${className}BaseMap" parameterType="java.util.Map">
         SELECT <include refid="base_table_all_columns"/> FROM ${table.sqlName}
@@ -169,7 +243,6 @@
     </select>
 
 
-
     <!-- 根据query条件获取数据列表。 -->
     <select id="selectList" resultMap="${className}BaseMap" parameterType="java.util.Map">
         SELECT <include refid="base_sql_query_column"/> FROM ${table.sqlName}
@@ -178,7 +251,6 @@
         </where>
         <include refid="base_sql_order_by" />
     </select>
-
 
 
     <!-- 根据query条件获取记录总数。 -->
@@ -199,7 +271,6 @@
         <include refid="base_sql_order_by" />
         LIMIT <@jspEl value="query.startIndex" />, <@jspEl value="query.pageSize" />
     </select>
-    
 
 </mapper>
 
