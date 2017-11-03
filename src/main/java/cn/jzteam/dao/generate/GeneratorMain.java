@@ -17,17 +17,7 @@ public class GeneratorMain {
 //         打印数据库中的表名称
 //         GeneratorFacade.printAllTableNames();
 
-        // 测试rebase1
-
-        // 测试rebase2
-
-        // 测试rebase3拆分
-
-        // 测试rebase4拆分了
-
-        // 测试结束
-
-        // 不能都删除了呀
+        // 好
 
         // 删除生成器的输出目录
         //genFacade.deleteOutRootDir();
