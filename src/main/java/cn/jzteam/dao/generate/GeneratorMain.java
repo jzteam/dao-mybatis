@@ -13,9 +13,9 @@ public class GeneratorMain {
      */
     public static void main(String[] args) throws Exception {
         GeneratorFacade genFacade = new GeneratorFacade();
-        
-        // 打印数据库中的表名称
-        // GeneratorFacade.printAllTableNames();
+
+//         打印数据库中的表名称
+//         GeneratorFacade.printAllTableNames();
 
         // 删除生成器的输出目录
         //genFacade.deleteOutRootDir();
