@@ -23,6 +23,8 @@ public class GeneratorMain {
 
         // 测试rebase3拆分
 
+        // 测试rebase4拆分了
+
         // 删除生成器的输出目录
         //genFacade.deleteOutRootDir();
 
