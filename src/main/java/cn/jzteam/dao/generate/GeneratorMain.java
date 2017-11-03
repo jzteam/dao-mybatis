@@ -27,6 +27,8 @@ public class GeneratorMain {
 
         // 测试结束
 
+        // 不能都删除了呀
+
         // 删除生成器的输出目录
         //genFacade.deleteOutRootDir();
 
