@@ -54,7 +54,7 @@
         <selectKey resultType="${table.idColumn.javaType}" keyProperty="entity.id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO ${table.sqlName} (
+        INSERT INTO `${table.sqlName}` (
 	        <trim suffixOverrides=",">
 	        <#list table.columns as column>
 	       	<#if column.pk>
@@ -84,9 +84,9 @@
     
     <!-- insertBatch，批量插入 -->
     <insert id="insertBatch" parameterType="java.util.Map">
-    	<foreach collection="list" item="entity" separator=";"> 
-    	
-    		INSERT INTO ${table.sqlName} (
+    	<foreach collection="list" item="entity" separator=";">
+
+            INSERT INTO `${table.sqlName}` (
 		        <trim suffixOverrides=",">
 		        <#list table.columns as column>
 		       	<#if column.pk>
@@ -119,20 +119,21 @@
 
     <!-- delete，根据主键删除指定表数据。 -->
     <delete id="deleteById" parameterType="java.util.Map">
-        DELETE FROM ${table.sqlName} WHERE `${table.idColumn.sqlName}` = <@mybatisEl value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
+    DELETE FROM `${table.sqlName}` WHERE `${table.idColumn.sqlName}` =<@mybatisEl
+    value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
     </delete>
     
     
     <!-- deleteBatch，批量删除，根据id -->
     <delete id="deleteBatch" parameterType="java.util.Map">
-        DELETE FROM ${table.sqlName} WHERE `${table.idColumn.sqlName}` IN
+    DELETE FROM `${table.sqlName}` WHERE `${table.idColumn.sqlName}` IN
         <foreach collection="list" item="item" open="(" close=")" separator=","><@mybatisEl value="item" /></foreach>
     </delete>
     
 
     <!-- update，根据主键更新表数据。 -->
     <update id="update" parameterType="java.util.Map">
-        UPDATE ${table.sqlName}
+    UPDATE `${table.sqlName}`
         <set>
         <#list table.columns as column>
         <#if !column.pk || (column.isDateTimeColumn && !column.contains("update,modify"))>
@@ -153,7 +154,7 @@
     <!-- updateBatch，批量更新，根据id -->
 <update id="updateBatch" parameterType="java.util.Map">
     	<foreach collection="list" separator=";" item="entity">
-	    	UPDATE ${table.sqlName}
+            UPDATE `${table.sqlName}`
 	        <set>
 	        <#list table.columns as column>
 	        <#if !column.pk || (column.isDateTimeColumn && !column.contains("update,modify"))>
@@ -173,7 +174,7 @@
     
     <!-- update，根据条件更新 -->
     <update id="updateSpecial" parameterType="java.util.Map">
-        UPDATE ${table.sqlName}
+    UPDATE `${table.sqlName}`
         <set>
         <#list table.columns as column>
         <#if !column.pk || (column.isDateTimeColumn && !column.contains("update,modify"))>
@@ -194,7 +195,7 @@
     
     <!-- incr，根据id把field字段增加delta，限于数字类型；mysql5.6以上版本 -->
 <update id="incr" parameterType="java.util.Map">
-        UPDATE ${table.sqlName}
+UPDATE `${table.sqlName}`
         <set>
         	`<@jspEl value="field" />` = `<@jspEl value="field" />` + <@mybatisEl value="delta" />, 
         </set>
@@ -204,7 +205,7 @@
     
     <!-- decr，根据id把field字段增加delta，限于数字类型；mysql5.6以上版本 -->
 <update id="decr" parameterType="java.util.Map">
-        UPDATE ${table.sqlName}
+UPDATE `${table.sqlName}`
         <set>
         	`<@jspEl value="field" />` = `<@jspEl value="field" />` - <@mybatisEl value="delta" />, 
         </set>
@@ -214,13 +215,18 @@
 
     <!-- selectById，根据主键获取唯一数据。 -->
     <select id="selectById" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="base_table_all_columns"/> FROM ${table.sqlName} WHERE ${table.idColumn.sqlName} = <@mybatisEl value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
+    SELECT
+    <include refid="base_table_all_columns"/>
+    FROM `${table.sqlName}` WHERE ${table.idColumn.sqlName} =<@mybatisEl value="${table.idColumn.columnNameLower},
+    jdbcType=${table.idColumn.jdbcType}" />
     </select>
 
 
 	<!-- selectByIds，根据主键获取记录列表 -->
     <select id="selectByIds" resultMap="${className}BaseMap" parameterType="${table.idColumn.javaType}">
-        SELECT <include refid="base_table_all_columns"/> FROM ${table.sqlName}
+    SELECT
+    <include refid="base_table_all_columns"/>
+    FROM `${table.sqlName}`
         <where> id IN 
 	        <foreach collection="list" open="(" separator="," close=")" item="itemId"><@mybatisEl value="itemId" /></foreach>
     	</where>
@@ -229,13 +235,18 @@
 
     <!-- selectByIds，根据主键获取唯一数据。 -->
     <select id="selectById_notry" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="base_table_all_columns"/> FROM ${table.sqlName} WHERE ${table.idColumn.sqlName} = <@mybatisEl value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" /> FOR UPDATE
+    SELECT
+    <include refid="base_table_all_columns"/>
+    FROM `${table.sqlName}` WHERE ${table.idColumn.sqlName} =<@mybatisEl value="${table.idColumn.columnNameLower},
+    jdbcType=${table.idColumn.jdbcType}" /> FOR UPDATE
     </select>
 
 
     <!-- selectFirstOne，根据query条件过滤数据，按照主键生序排列获取第一条数据。 -->
     <select id="selectFirstOne" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="base_table_all_columns"/> FROM ${table.sqlName}
+    SELECT
+    <include refid="base_table_all_columns"/>
+    FROM `${table.sqlName}`
         <where>
             <include refid="base_sql_query_condition"/>
         </where>
@@ -245,7 +256,9 @@
 
     <!-- 根据query条件获取数据列表。 -->
     <select id="selectList" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="base_sql_query_column"/> FROM ${table.sqlName}
+    SELECT
+    <include refid="base_sql_query_column"/>
+    FROM `${table.sqlName}`
         <where>
             <include refid="base_sql_query_condition"/>
         </where>
@@ -255,7 +268,7 @@
 
     <!-- 根据query条件获取记录总数。 -->
     <select id="queryPageCount" resultType="java.lang.Long" parameterType="java.util.Map">
-        SELECT COUNT(*) FROM ${table.sqlName}
+    SELECT COUNT(*) FROM `${table.sqlName}`
         <where>
             <include refid="base_sql_query_condition"/>
         </where>
@@ -264,7 +277,9 @@
     
     <!-- 根据query条件分页获取指定页码的数据。 -->
     <select id="queryPageList" resultMap="${className}BaseMap" parameterType="java.util.Map">
-        SELECT <include refid="base_sql_query_column"/> FROM ${table.sqlName}
+    SELECT
+    <include refid="base_sql_query_column"/>
+    FROM `${table.sqlName}`
         <where>
             <include refid="base_sql_query_condition"/>
         </where>
