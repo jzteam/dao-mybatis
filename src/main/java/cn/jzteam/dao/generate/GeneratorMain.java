@@ -24,11 +24,10 @@ public class GeneratorMain {
         genFacade.getGenerator().addTemplateRootDir("classpath:/template_all");
 
         //通过数据库表生成文件,template为模板的根目录
-        genFacade.generateByTable("task");
 //        genFacade.generateByTable("admin_bank_record","block_publish_coin");
 
         // 自动搜索数据库中的所有表并生成文件。
-        // genFacade.generateByAllTable();
+        genFacade.generateByAllTable();
 
         // 根据指定的对象类生成文件。
         // genFacade.generateByClass(User.class);

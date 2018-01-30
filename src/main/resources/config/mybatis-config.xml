@@ -11,7 +11,7 @@
 	</settings>
 	
 	<typeAliases>
-		<package name="com.atguigu.crud.bean"/>
+		<package name="cn.jzteam.bean"/>
 	</typeAliases>
 	
 	<!-- <plugins>

@@ -6,9 +6,11 @@ import cn.jzteam.swift.dao.BaseDao;
 import ${basepackage}.dao.entity.${className}Entity;
 import ${basepackage}.dao.query.${className}BaseQuery;
 
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
+@Mapper
 public interface ${className}Dao extends BaseDao<${className}Entity, ${className}BaseQuery, ${table.idColumn.simpleJavaType}>{
 
 }

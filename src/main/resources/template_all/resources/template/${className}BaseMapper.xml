@@ -151,7 +151,7 @@
     
     
     <!-- updateBatch，批量更新，根据id -->
-    <update id="update" parameterType="java.util.Map">
+<update id="updateBatch" parameterType="java.util.Map">
     	<foreach collection="list" separator=";" item="entity">
 	    	UPDATE ${table.sqlName}
 	        <set>
@@ -193,7 +193,7 @@
     
     
     <!-- incr，根据id把field字段增加delta，限于数字类型；mysql5.6以上版本 -->
-    <update id="update" parameterType="java.util.Map">
+<update id="incr" parameterType="java.util.Map">
         UPDATE ${table.sqlName}
         <set>
         	`<@jspEl value="field" />` = `<@jspEl value="field" />` + <@mybatisEl value="delta" />, 
@@ -203,7 +203,7 @@
     
     
     <!-- decr，根据id把field字段增加delta，限于数字类型；mysql5.6以上版本 -->
-    <update id="update" parameterType="java.util.Map">
+<update id="decr" parameterType="java.util.Map">
         UPDATE ${table.sqlName}
         <set>
         	`<@jspEl value="field" />` = `<@jspEl value="field" />` - <@mybatisEl value="delta" />, 

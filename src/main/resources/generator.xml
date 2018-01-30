@@ -14,7 +14,7 @@
 
 	<!-- mapper文件输出目录 -->
     <!-- <entry key="outRoot">/Users/oker/work/output</entry> -->
-    <entry key="outRoot">/Users/oker/work/workspace0/barber/src/main</entry>
+    <entry key="outRoot">/Users/oker/jzteam/barber/src/main</entry>
 
     <!-- 需要移除的表名前缀,使用逗号进行分隔多个前缀,示例值: t_,v_ -->
     <entry key="tableRemovePrefixes"></entry>
@@ -38,7 +38,7 @@
     <entry key="java_typemapping.java.sql.Blob">byte[]</entry>
 
     <!-- Mysql -->
-    <entry key="jdbc_url">jdbc:mysql://localhost:3306/task?useUnicode=true</entry>
+    <entry key="jdbc_url">jdbc:mysql://localhost:3306/barber?useUnicode=true</entry>
     <entry key="jdbc_driver">com.mysql.jdbc.Driver</entry>
 
 </properties>
