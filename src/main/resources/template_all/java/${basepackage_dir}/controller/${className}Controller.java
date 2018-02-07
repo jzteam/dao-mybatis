@@ -9,10 +9,15 @@ import ${basepackage}.service.${className}Service;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequestMapping("/${className}")
 public class ${className}Controller {
 	
 	@Autowired
 	private ${className}Service service;
 
+	@RequestMapping("/index")
+	public String index(){
+		return "${className}/index";
+	}
 
 }
