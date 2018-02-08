@@ -234,7 +234,7 @@ UPDATE `${table.sqlName}`
 
 
     <!-- selectByIds，根据主键获取唯一数据。 -->
-    <select id="selectById_notry" resultMap="${className}BaseMap" parameterType="java.util.Map">
+<select id="selectById_readLock" resultMap="${className}BaseMap" parameterType="java.util.Map">
     SELECT
     <include refid="base_table_all_columns"/>
     FROM `${table.sqlName}` WHERE ${table.idColumn.sqlName} =<@mybatisEl value="${table.idColumn.columnNameLower},
@@ -267,7 +267,7 @@ UPDATE `${table.sqlName}`
 
 
     <!-- 根据query条件获取记录总数。 -->
-    <select id="queryPageCount" resultType="java.lang.Long" parameterType="java.util.Map">
+<select id="queryCount" resultType="java.lang.Long" parameterType="java.util.Map">
     SELECT COUNT(*) FROM `${table.sqlName}`
         <where>
             <include refid="base_sql_query_condition"/>

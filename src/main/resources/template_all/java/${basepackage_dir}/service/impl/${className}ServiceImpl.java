@@ -14,12 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ${className}ServiceImpl extends AbstractBaseServiceImpl<${className}Entity, ${className}BaseQuery, ${table.idColumn.simpleJavaType}>
+public class ${className}ServiceImpl extends AbstractBaseServiceImpl<${className}Entity, ${table.idColumn.simpleJavaType}>
 	implements ${className}Service{
-
-	@Autowired
-	private ${className}Dao ${classNameLower}Dao;
-
 
 	private ${className}Entity convertForm2entity(${className} form){
 		if(form == null){
@@ -43,5 +39,56 @@ public class ${className}ServiceImpl extends AbstractBaseServiceImpl<${className
 		return form;
 	}
 
+
+	/**
+	 * 修改与保存
+	 */
+	public ${table.idColumn.simpleJavaType} saveForm(${className}Form form){
+		// 条件判断
+
+		// 转换
+		${className}Entity entity = convertForm2entity(form);
+		if(entity == null){
+			return null;
+		}
+
+		// 插入返回
+		return this.save(entity);
+
+	}
+
+
+	/**
+	 * 查询列表
+ 	*/
+	public List<${className}Form> selectFormByQuery(${className}BaseQuery query){
+		if(query == null){
+			return null;
+		}
+
+		List<${className}Form> formList = new ArrayList<>();
+		List<${className}Entity> entityList = this.selectList(query);
+		if(CollectionUtils.isEmpty(entityList)){
+			return formList;
+		}
+
+		entityList.forEach(x->{
+			formList.add(convertEntity2form(x));
+		});
+
+		return formList;
+	}
+
+	/**
+	 * 查询单条
+	 */
+	public ${className}Form getFormById(${table.idColumn.simpleJavaType} id){
+		if(id == null){
+			return null;
+		}
+		${className}Entity entity = this.selectById(query);
+
+		return convertEntity2form(entity);
+	}
 
 }
