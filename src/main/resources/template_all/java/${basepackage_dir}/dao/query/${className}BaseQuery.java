@@ -7,9 +7,7 @@ import cn.jzteam.swift.query.QueryCondition;
 import java.math.BigDecimal;
 <#include "/java_imports.include">
 
-
 public class ${className}BaseQuery extends QueryCondition implements Serializable{
-
 	private static final long serialVersionUID=-1L;
 
 	<@generateFields/>

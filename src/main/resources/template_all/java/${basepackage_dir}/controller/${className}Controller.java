@@ -1,15 +1,22 @@
 <#include "/macro.include">
 <#assign className = table.className>
 <#assign classNameLower = className?uncap_first>
-
 package ${basepackage}.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import ${basepackage}.dao.query.${className}BaseQuery;
+import ${basepackage}.form.${className}Form;
 import ${basepackage}.service.${className}Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
-@RequestMapping("/${className}")
+@RequestMapping("/${classNameLower}")
 public class ${className}Controller {
 	
 	@Autowired
@@ -21,9 +28,17 @@ public class ${className}Controller {
 	@RequestMapping("/index")
 	public String index(${className}BaseQuery query, HttpServletRequest request){
 		// 查询数据列表
-		List<${className}Form> formList = service.selectFormByQuery(query);
-		request.addAttribute("formList", formList);
+		request.setAttribute("formList", this.listByQuery(query));
 		return "${className}/index";
+	}
+
+	/**
+	 * 查询列表
+	 */
+	@RequestMapping("/list")
+	@ResponseBody
+	public List<${className}Form> listByQuery(${className}BaseQuery query){
+		return service.selectFormByQuery(query);
 	}
 
 	/**
@@ -31,7 +46,7 @@ public class ${className}Controller {
 	 */
 	@RequestMapping("/get/{id}")
 	@ResponseBody
-	public ${className} save(@PathVariable("id") ${table.idColumn.simpleJavaType} id, HttpServletRequest request){
+	public ${className}Form getById(@PathVariable("id") ${table.idColumn.simpleJavaType} id, HttpServletRequest request){
 
 		return service.getFormById(id);
 	}

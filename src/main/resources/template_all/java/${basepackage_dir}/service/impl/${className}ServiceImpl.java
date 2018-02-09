@@ -1,23 +1,24 @@
-import org.springframework.beans.factory.annotation.Autowired;
-
 <#include "/macro.include">
 <#assign className = table.className>
 <#assign classNameLower = className?uncap_first>
-
 package ${basepackage}.service.impl;
 
 import ${basepackage}.dao.entity.${className}Entity;
 import ${basepackage}.dao.query.${className}BaseQuery;
+import ${basepackage}.form.${className}Form;
 import ${basepackage}.service.${className}Service;
 import cn.jzteam.swift.service.impl.AbstractBaseServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ${className}ServiceImpl extends AbstractBaseServiceImpl<${className}Entity, ${table.idColumn.simpleJavaType}>
 	implements ${className}Service{
 
-	private ${className}Entity convertForm2entity(${className} form){
+	private ${className}Entity convertForm2entity(${className}Form form){
 		if(form == null){
 			return null;
 		}
@@ -28,11 +29,11 @@ public class ${className}ServiceImpl extends AbstractBaseServiceImpl<${className
 		return entity;
 	}
 
-	private ${className} convertEntity2form(${className}Entity entity){
+	private ${className}Form convertEntity2form(${className}Entity entity){
 		if(entity == null){
 			return null;
 		}
-		${className} form = new ${className}();
+		${className}Form form = new ${className}Form();
 		<#list table.columns as column>
 		form.set${column.columnName}(entity.get${column.columnName}());
 		</#list>
@@ -43,6 +44,7 @@ public class ${className}ServiceImpl extends AbstractBaseServiceImpl<${className
 	/**
 	 * 修改与保存
 	 */
+	@Override
 	public ${table.idColumn.simpleJavaType} saveForm(${className}Form form){
 		// 条件判断
 
@@ -61,6 +63,7 @@ public class ${className}ServiceImpl extends AbstractBaseServiceImpl<${className
 	/**
 	 * 查询列表
  	*/
+	@Override
 	public List<${className}Form> selectFormByQuery(${className}BaseQuery query){
 		if(query == null){
 			return null;
@@ -82,11 +85,12 @@ public class ${className}ServiceImpl extends AbstractBaseServiceImpl<${className
 	/**
 	 * 查询单条
 	 */
+	@Override
 	public ${className}Form getFormById(${table.idColumn.simpleJavaType} id){
 		if(id == null){
 			return null;
 		}
-		${className}Entity entity = this.selectById(query);
+		${className}Entity entity = this.selectById(id);
 
 		return convertEntity2form(entity);
 	}
