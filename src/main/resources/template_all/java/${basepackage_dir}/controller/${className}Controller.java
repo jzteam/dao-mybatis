@@ -29,7 +29,7 @@ public class ${className}Controller {
 	public String index(${className}BaseQuery query, HttpServletRequest request){
 		// 查询数据列表
 		request.setAttribute("formList", this.listByQuery(query));
-		return "${className}/index";
+		return "${classNameLower}/index";
 	}
 
 	/**

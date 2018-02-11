@@ -10,7 +10,7 @@
     <entry key="basepackage">cn.jzteam.barber</entry>
 
     <!-- jsp namespace: web/${namespace}/${className}/list.jsp -->
-    <entry key="namespace">pages</entry>
+    <entry key="namespace">jsp</entry>
 
 	<!-- mapper文件输出目录 -->
     <!-- <entry key="outRoot">/Users/oker/work/output</entry> -->
