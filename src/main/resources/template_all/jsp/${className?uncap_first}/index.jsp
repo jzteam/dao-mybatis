@@ -180,7 +180,7 @@
                 });
 
                 // 编辑保存
-                $("#submitUserInfoRecharge").bind("click", function () {
+                $("#submitEdit").bind("click", function () {
 
                     var formData = Util.formToJson($("#editFormId").serializeArray());
                     console.log(formData);
@@ -205,8 +205,8 @@
                     $tds = $target.parents("td").siblings();
                     var targetId = $tds.eq(0).text();
 
-                    if (confirm("你确定删除：" + $tds.eq(1).text())) {
-                        if (confirm("再次确定删除：" + $tds.eq(2).text())) {
+                    if (confirm("你确定删除：" + targetId)) {
+                        if (confirm("再次确定删除：" + targetId)) {
                             //提交修改用户信息
                             LINK_HTTP.get("/${classNameLower}/delete/" + targetId, function (data) {
                                 if (data.code == 0) {

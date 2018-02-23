@@ -118,7 +118,7 @@
     
 
     <!-- delete，根据主键删除指定表数据。 -->
-    <delete id="deleteById" parameterType="java.util.Map">
+<delete id="delete" parameterType="java.util.Map">
     DELETE FROM `${table.sqlName}` WHERE `${table.idColumn.sqlName}` =<@mybatisEl
     value="${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}" />
     </delete>
