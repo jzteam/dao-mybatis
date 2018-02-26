@@ -17,9 +17,7 @@
 
             <div class="page-header">
                 <div style="margin-bottom: 5px;">
-                    <button class="btn btn-danger btn-block" data-toggle="modal"
-                            data-target="#myModal">新增
-                    </button>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#myModal">新增</button>
                 </div>
             </div>
 
