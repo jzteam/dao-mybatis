@@ -55,6 +55,7 @@ public class ${className}Controller {
 	 * 保存
 	 */
 	@RequestMapping("/save")
+	@ResponseBody
 	public void save(${className}Form form, HttpServletRequest request){
 		service.saveForm(form);
 		return;
@@ -64,7 +65,8 @@ public class ${className}Controller {
 	 * 删除
 	 */
 	@RequestMapping("/delete/{id}")
-	public void save(@PathVariable("id") ${table.idColumn.simpleJavaType} id){
+	@ResponseBody
+	public void deleteById(@PathVariable("id") ${table.idColumn.simpleJavaType} id){
 		service.delete(id);
 		return;
 	}
