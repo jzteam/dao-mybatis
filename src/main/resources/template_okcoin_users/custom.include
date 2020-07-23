@@ -1,0 +1,4 @@
+<#-- 本文件包含一些公共的变量 -->
+
+<#-- actionBasePath 用于struts,springmvc框架的action路径前缀,如 /namespace/User/list.do的/namespace/User部分,可以自定义这个变量 -->
+<#assign actionBasePath = "/"+namespace+"/"+table.className>

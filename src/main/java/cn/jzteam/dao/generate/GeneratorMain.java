@@ -18,16 +18,16 @@ public class GeneratorMain {
 //         GeneratorFacade.printAllTableNames();
 
         // 删除生成器的输出目录
-        //genFacade.deleteOutRootDir();
+        genFacade.deleteOutRootDir();
 
         // 设置模版文件所在的路径。
-        genFacade.getGenerator().addTemplateRootDir("classpath:/template_all");
+        genFacade.getGenerator().addTemplateRootDir("classpath:/template_okcoin_users");
 
         //通过数据库表生成文件,template为模板的根目录
-//        genFacade.generateByTable("task_config");
+        genFacade.generateByTable("user_security_reset");
 
         // 自动搜索数据库中的所有表并生成文件。
-        genFacade.generateByAllTable();
+//        genFacade.generateByAllTable();
 
         // 根据指定的对象类生成文件。
         // genFacade.generateByClass(User.class);
