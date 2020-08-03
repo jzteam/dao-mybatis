@@ -6,12 +6,7 @@ package ${basepackage}.domain;
 <#include "/java_imports.include">
 
 public class Enum${className} {
-<#list table.columns as column>
-	/**
-	 * ${column.columnAlias}
-	 */
-	private ${column.simpleJavaType} ${column.columnNameLower};
-</#list>
+
 
 	private final int code;
 	private final String msg;
