@@ -14,7 +14,7 @@ public class GeneratorMain {
     public static void main(String[] args) throws Exception {
         GeneratorFacade genFacade = new GeneratorFacade();
 
-//         打印数据库中的表名称
+         // 打印数据库中的表名称
 //         GeneratorFacade.printAllTableNames();
 
         // 删除生成器的输出目录
@@ -24,7 +24,7 @@ public class GeneratorMain {
         genFacade.getGenerator().addTemplateRootDir("classpath:/template_okcoin_users");
 
         //通过数据库表生成文件,template为模板的根目录
-        genFacade.generateByTable("user_security_reset");
+        genFacade.generateByTable("user_security_reset", "user_face_verify", "user_face_image");
 
         // 自动搜索数据库中的所有表并生成文件。
 //        genFacade.generateByAllTable();
