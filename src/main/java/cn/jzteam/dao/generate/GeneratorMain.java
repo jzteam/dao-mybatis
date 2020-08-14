@@ -24,7 +24,7 @@ public class GeneratorMain {
         genFacade.getGenerator().addTemplateRootDir("classpath:/template_okcoin_users");
 
         //通过数据库表生成文件,template为模板的根目录
-        genFacade.generateByTable("user_security_reset", "user_face_verify", "user_face_image");
+        genFacade.generateByTable("user_novice_reward_config", "user_novice_reward_record", "partner_config", "partner_earnings_daily");
 
         // 自动搜索数据库中的所有表并生成文件。
 //        genFacade.generateByAllTable();

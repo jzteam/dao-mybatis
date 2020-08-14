@@ -16,7 +16,7 @@ public class ${className}Example {
 
 	protected List<Criteria> oredCriteria;
 
-	public UserMakerConfigureExample() {
+	public ${className}Example() {
 		oredCriteria = new ArrayList<>();
 	}
 
@@ -254,26 +254,6 @@ public class ${className}Example {
 
 	public Criteria and${column.columnName}NotBetween(${column.simpleJavaType} value1, ${column.simpleJavaType} value2) {
 		addCriterion("${column.sqlName} not between", value1, value2, "${column.columnNameLower}");
-		return (Criteria) this;
-	}
-
-	public Criteria and${column.columnName}GreaterThan(${column.simpleJavaType} value) {
-		addCriterion("${column.sqlName} >", value, "${column.columnNameLower}");
-		return (Criteria) this;
-	}
-
-	public Criteria and${column.columnName}GreaterThanOrEqualTo(${column.simpleJavaType} value) {
-		addCriterion("${column.sqlName} >=", value, "${column.columnNameLower}");
-		return (Criteria) this;
-	}
-
-	public Criteria and${column.columnName}LessThan(${column.simpleJavaType} value) {
-		addCriterion("${column.sqlName} <", value, "${column.columnNameLower}");
-		return (Criteria) this;
-	}
-
-	public Criteria and${column.columnName}LessThanOrEqualTo(${column.simpleJavaType} value) {
-		addCriterion("${column.sqlName} <=", value, "${column.columnNameLower}");
 		return (Criteria) this;
 	}
 
