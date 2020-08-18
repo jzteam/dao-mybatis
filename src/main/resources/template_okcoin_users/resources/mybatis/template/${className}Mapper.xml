@@ -49,6 +49,7 @@
     <sql id="Table_Name">${table.sqlName}</sql>
     <sql id="Base_Column_List_Without_Id">
         <#list table.columns as column><#if column.pk><#else>`${column.sqlName}`<#if column_has_next>, </#if></#if></#list>
+    </sql>
     <sql id="Base_Column_List">
         ${table.idColumn.columnNameLower}, <include refid="Base_Column_List_Without_Id"/>
     </sql>
@@ -196,7 +197,6 @@
         <include refid="Table_Name"/>
         where ${table.idColumn.sqlName} = ${r"#{"}${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}${r"}"}
     </select>
-<#noparse>
     <select id="selectByExample" resultMap="${className}Map" parameterType="java.util.Map">
         select
         <if test="example != null and example.distinct">
@@ -209,7 +209,7 @@
             <include refid="Example_Where_Clause"/>
         </if>
         <if test="example != null and example.orderByClause != null">
-            order by ${example.orderByClause}
+            order by ${r"${"}example.orderByClause${r"}"}
         </if>
     </select>
     <select id="selectOneByExample" resultMap="${className}Map" parameterType="java.util.Map">
@@ -221,11 +221,10 @@
             <include refid="Example_Where_Clause"/>
         </if>
         <if test="example != null and example.orderByClause != null">
-            order by ${example.orderByClause}
+            order by ${r"${"}example.orderByClause${r"}"}
         </if>
         limit 1
     </select>
-</#noparse>
     <select id="selectIn" resultMap="${className}Map" parameterType="java.util.Map">
         select
         <include refid="Base_Column_List"/>
@@ -236,7 +235,6 @@
             ${r"#{"}record.${table.idColumn.columnNameLower}, jdbcType=${table.idColumn.jdbcType}${r"}"}
         </foreach>
     </select>
-<#noparse>
     <select id="countByExample" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*) as total from
         <include refid="Table_Name"/>
@@ -260,11 +258,10 @@
             <include refid="Example_Where_Clause"/>
         </if>
         <if test="pager.sortItem != null and pager.sortItem != '' ">
-            order by ${pager.sortItem} ${pager.sortType}
+            order by ${r"${"}pager.sortItem${r"}"} ${r"${"}pager.sortType${r"}"}
         </if>
-        limit #{pager.startIndex} , #{pager.pageSize}
+        limit ${r"#{"}pager.startIndex${r"}"} , ${r"#{"}pager.pageSize${r"}"}
     </select>
-</#noparse>
     <!-- end select -->
     <!-- My Custom Interfaces -->
 </mapper>
