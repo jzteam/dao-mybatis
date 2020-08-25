@@ -3,8 +3,9 @@
 <#assign classNameLower = className?uncap_first> 
 package ${basepackage}.domain;
 
+import lombok.*;
 <#include "/java_imports.include">
-import lombok.*
+
 
 @Data
 @Builder
