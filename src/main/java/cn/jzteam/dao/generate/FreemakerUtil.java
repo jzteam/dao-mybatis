@@ -1,13 +1,23 @@
 package cn.jzteam.dao.generate;
 
+import cn.org.rapid_framework.generator.Generator;
+import cn.org.rapid_framework.generator.util.*;
+import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
 import java.io.*;
-import java.util.Map;
+import java.util.*;
 
 public class FreemakerUtil {
+
+    public static final String sourceEncoding = "UTF-8";
+    public static final String outputEncoding = "UTF-8";
+
+    public static final String templateRootDir = "classpath:/template_okcoin_users";
 
     //主要的方法来了
     public static void generateFileByTemplate(final String templateName, File file, Map<String,Object> dataMap) throws Exception{
@@ -25,7 +35,118 @@ public class FreemakerUtil {
 //        dataMap.put("date", CURRENT_DATE);
 //        dataMap.put("package_name", packageName);
 //        dataMap.put("enum_class_name", enumClassName);
-        Writer out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"),10240);
+        Writer out = new BufferedWriter(new OutputStreamWriter(fos, outputEncoding),10240);
         template.process(dataMap,out);
     }
+
+    public static void process(String templateFullName, Map templateModel, Map filePathModel) {
+        List<File> templateRootDirs = new ArrayList<>();
+        templateRootDirs.add(FileHelper.getFile(templateRootDir));
+        try {
+            //生成 路径值,如 pkg=com.company.project 将生成 pkg_dir=com/company/project的值
+            templateModel.putAll(getDirValuesMap(templateModel));
+            filePathModel.putAll(getDirValuesMap(filePathModel));
+            // 模板文件
+            Template template = newFreeMarkerConfiguration(templateRootDirs, sourceEncoding, templateFullName).getTemplate(templateFullName);
+            template.setOutputEncoding(outputEncoding);
+            // 输出文件
+            String outputFilepath = proceeForOutputFilepath(templateRootDirs, filePathModel, templateFullName);
+            outputFilepath = filePathModel.get("outRoot_dir") + "/" + outputFilepath;
+            File absoluteOutputFilePath = FileHelper.parentMkdir(outputFilepath);
+            // 执行
+            FreemarkerHelper.processTemplate(template, templateModel, absoluteOutputFilePath, outputEncoding);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Configuration newFreeMarkerConfiguration(List<File> templateRootDirs, String defaultEncoding, String templateName)
+            throws IOException {
+        Configuration conf = new Configuration();
+
+        FileTemplateLoader[] templateLoaders = new FileTemplateLoader[templateRootDirs.size()];
+        for (int i = 0; i < templateRootDirs.size(); i++) {
+            templateLoaders[i] = new FileTemplateLoader((File) templateRootDirs.get(i));
+        }
+        MultiTemplateLoader multiTemplateLoader = new MultiTemplateLoader(templateLoaders);
+
+        conf.setTemplateLoader(multiTemplateLoader);
+        conf.setNumberFormat("###############");
+        conf.setBooleanFormat("true,false");
+        conf.setDefaultEncoding(defaultEncoding);
+
+        List<String> autoIncludes = getParentPaths(templateName, "macro.include");
+        List<String> availableAutoInclude = FreemarkerHelper.getAvailableAutoInclude(conf, autoIncludes);
+        conf.setAutoIncludes(availableAutoInclude);
+        return conf;
+    }
+
+    public static List<String> getParentPaths(String templateName, String suffix) {
+        String array[] = StringHelper.tokenizeToStringArray(templateName, "\\/");
+        List<String> list = new ArrayList<String>();
+        list.add(suffix);
+        list.add(File.separator + suffix);
+        String path = "";
+        for (int i = 0; i < array.length; i++) {
+            path = path + File.separator + array[i];
+            list.add(path + File.separator + suffix);
+        }
+        return list;
+    }
+
+    /**
+     * 处理文件路径的变量变成输出路径
+      * @param templateRootDirs
+     * @param filePathModel
+     * @param templateFile
+     * @return
+     * @throws IOException
+     */
+    public static String proceeForOutputFilepath(List<File> templateRootDirs, Map filePathModel, String templateFile)
+            throws IOException {
+        String outputFilePath = templateFile;
+
+        int testExpressionIndex = -1;
+        if ((testExpressionIndex = templateFile.indexOf('@')) != -1) {
+            outputFilePath = templateFile.substring(0, testExpressionIndex);
+            String testExpressionKey = templateFile.substring(testExpressionIndex + 1);
+            Object expressionValue = filePathModel.get(testExpressionKey);
+            if (expressionValue == null) {
+                System.err.println("[not-generate] WARN: test expression is null by key:["
+                        + testExpressionKey + "] on template:[" + templateFile + "]");
+                return null;
+            }
+            if (!"true".equals(String.valueOf(expressionValue))) {
+                GLogger.println("[not-generate]\t test expression '@" + testExpressionKey
+                        + "' is false,template:" + templateFile);
+                return null;
+            }
+        }
+
+        Configuration conf = newFreeMarkerConfiguration(templateRootDirs, sourceEncoding, "/filepath/processor/");
+
+        //使freemarker支持过滤,如 ${className?lower_case} 现在为 ${className^lower_case}
+        outputFilePath = outputFilePath.replace('^', '?');
+        return FreemarkerHelper.processTemplateString(outputFilePath, filePathModel, conf);
+    }
+
+    /**
+     * 设置路径变量
+     * @param map
+     * @return
+     */
+    public static Map getDirValuesMap(Map map) {
+        Map dirValues = new HashMap();
+        Set<Object> keys = map.keySet();
+        for (Object key : keys) {
+            Object value = map.get(key);
+            if (key instanceof String && value instanceof String) {
+                String dirKey = key + "_dir";
+                String dirValue = value.toString().replace('.', '/');
+                dirValues.put(dirKey, dirValue);
+            }
+        }
+        return dirValues;
+    }
+
 }

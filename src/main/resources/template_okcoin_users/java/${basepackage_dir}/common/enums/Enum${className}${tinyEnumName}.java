@@ -1,11 +1,11 @@
-<#include "/macro.include"/>
 <#assign className = table.className>
 <#assign classNameLower = className?uncap_first> 
-package ${basepackage}.domain;
+package ${basepackage}.common.enums;
 
-<#include "/java_imports.include">
+import java.util.HashMap;
+import java.util.Map;
 
-public class Enum${className} {
+public class Enum${className}${tinyEnumName} {
 
 
 	private final int code;
