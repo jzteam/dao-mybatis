@@ -106,23 +106,6 @@ public class FreemakerUtil {
             throws IOException {
         String outputFilePath = templateFile;
 
-        int testExpressionIndex = -1;
-        if ((testExpressionIndex = templateFile.indexOf('@')) != -1) {
-            outputFilePath = templateFile.substring(0, testExpressionIndex);
-            String testExpressionKey = templateFile.substring(testExpressionIndex + 1);
-            Object expressionValue = filePathModel.get(testExpressionKey);
-            if (expressionValue == null) {
-                System.err.println("[not-generate] WARN: test expression is null by key:["
-                        + testExpressionKey + "] on template:[" + templateFile + "]");
-                return null;
-            }
-            if (!"true".equals(String.valueOf(expressionValue))) {
-                GLogger.println("[not-generate]\t test expression '@" + testExpressionKey
-                        + "' is false,template:" + templateFile);
-                return null;
-            }
-        }
-
         Configuration conf = newFreeMarkerConfiguration(templateRootDirs, sourceEncoding, "/filepath/processor/");
 
         //使freemarker支持过滤,如 ${className?lower_case} 现在为 ${className^lower_case}
