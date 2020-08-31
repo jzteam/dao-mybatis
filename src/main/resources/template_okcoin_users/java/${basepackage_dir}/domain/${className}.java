@@ -6,7 +6,10 @@ package ${basepackage}.domain;
 import lombok.*;
 <#include "/java_imports.include">
 
-
+/**
+ *
+ * @author ${author}
+ */
 @Data
 @Builder
 @NoArgsConstructor

@@ -11,7 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+/**
+ *
+ * @author ${author}
+ */
 @Slf4j
 @Service
 public class ${className}ServiceImpl extends AbstractCrudService<${className}Repository, ${className}, ${className}Example, ${table.idColumn.simpleJavaType}>

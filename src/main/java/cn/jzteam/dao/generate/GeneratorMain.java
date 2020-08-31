@@ -6,10 +6,8 @@ import cn.org.rapid_framework.generator.GeneratorProperties;
 import cn.org.rapid_framework.generator.provider.db.table.TableFactory;
 import cn.org.rapid_framework.generator.provider.db.table.model.Column;
 import cn.org.rapid_framework.generator.provider.db.table.model.Table;
-import cn.org.rapid_framework.generator.util.GeneratorException;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 
 /**
  * 代码自动生成工具。

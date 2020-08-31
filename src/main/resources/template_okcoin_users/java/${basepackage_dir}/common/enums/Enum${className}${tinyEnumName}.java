@@ -5,6 +5,10 @@ package ${basepackage}.common.enums;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ * @author ${author}
+ */
 public class Enum${className}${tinyEnumName} {
 
 

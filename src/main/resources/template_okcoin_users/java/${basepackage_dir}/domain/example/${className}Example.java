@@ -8,6 +8,10 @@ import java.util.List;
 import java.math.BigDecimal;
 <#include "/java_imports.include">
 
+/**
+ *
+ * @author ${author}
+ */
 public class ${className}Example {
 
 	protected String orderByClause;
